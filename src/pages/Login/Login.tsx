@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -63,7 +65,7 @@ function Login() {
           name="password"
         />
         <label htmlFor="password">Password</label>
-        <button type="submit">Submit</button>
+        <Button type="submit">Submit</Button>
       </form>
     </main>
   );
