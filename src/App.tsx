@@ -3,7 +3,7 @@ import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import PrivateRoutes from "./hocs/ProtectedRoute";
-import Navbar from "./components/Navbar";
+import Navbar from "./features/navbar/Navbar";
 
 import { Route, Routes } from "react-router-dom";
 

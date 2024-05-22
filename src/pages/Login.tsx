@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/features/ui/button";
 import { setAuth } from "@/slices/authSlice";
 
 import { useDispatch } from "react-redux";

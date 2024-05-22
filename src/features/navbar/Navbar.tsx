@@ -1,7 +1,7 @@
-import UserAccountNav from "@/components/UserAccountNav";
-import ThemeToggle from "@/components/ThemeToggle";
+import UserAccountNav from "./UserAccountNav";
+import ThemeToggle from "./ThemeToggle";
 import type { RootState } from "@/store";
-import SignInButton from "@/components/SignInButton";
+import SignInButton from "./SignInButton";
 
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";

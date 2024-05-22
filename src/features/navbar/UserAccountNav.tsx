@@ -4,8 +4,8 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import UserAvatar from "@/components/UserAvatar";
+} from "@/features/ui/dropdown-menu";
+import UserAvatar from "./UserAvatar";
 import { Link } from "react-router-dom";
 import { LogOut } from "lucide-react";
 
