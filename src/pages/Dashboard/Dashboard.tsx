@@ -1,19 +1,10 @@
-import { useNavigate } from "react-router-dom";
+import useAuth from "@/hooks/useAuth";
+
 import { useEffect } from "react";
 import axios from "@/api/axios.config";
-import { ErrorObjType } from "@/types/error.type";
 
 function Dashboard() {
-  const navigate = useNavigate();
-
-  function handleNonAuthUser(error: ErrorObjType) {
-    const { status } = error as ErrorObjType;
-
-    if (status === 401) {
-      localStorage.removeItem("user");
-      navigate("/login");
-    }
-  }
+  const { handleNonAuthUser } = useAuth();
 
   async function test() {
     try {
