@@ -1,5 +1,5 @@
 import UserAccountNav from "@/components/UserAccountNav";
-// import { ThemeToggle } from "./ThemeToggle";
+import ThemeToggle from "@/components/ThemeToggle";
 import type { RootState } from "@/store";
 import SignInButton from "@/components/SignInButton";
 
@@ -19,7 +19,7 @@ const Navbar = () => {
           </p>
         </Link>
         <div className="flex items-center">
-          {/* <ThemeToggle className="mr-4" /> */}
+          <ThemeToggle className="mr-4" />
           {user ? (
             <UserAccountNav email={user.email} />
           ) : (
