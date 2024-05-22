@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
+import { setAuth } from "@/slices/authSlice";
 
+import { useDispatch } from "react-redux";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -9,6 +11,7 @@ function validateInput(email: string, password: string) {
 
 function Login() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -36,6 +39,7 @@ function Login() {
         }
       );
 
+      dispatch(setAuth(data.user));
       localStorage.setItem("user", JSON.stringify(data.user));
 
       console.log(data);

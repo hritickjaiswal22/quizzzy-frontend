@@ -1,15 +1,12 @@
+import type { RootState } from "@/store";
+
 import { Outlet, Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const PrivateRoutes = () => {
-  const userStr = localStorage.getItem("user");
+  const user = useSelector((state: RootState) => state.auth.user);
 
-  console.log(userStr);
-
-  return userStr && JSON.parse(userStr).token ? (
-    <Outlet />
-  ) : (
-    <Navigate to="/login" />
-  );
+  return user && user.token ? <Outlet /> : <Navigate to="/login" />;
 };
 
 export default PrivateRoutes;
