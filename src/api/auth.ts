@@ -24,4 +24,26 @@ async function signin(email: string, password: string) {
   }
 }
 
-export { signin };
+async function signup(email: string, password: string) {
+  try {
+    const { data } = await axios.post(
+      `${baseURL}/auths/register`,
+      {
+        email,
+        password,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+
+    const { user } = data;
+
+    return user;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export { signin, signup };
