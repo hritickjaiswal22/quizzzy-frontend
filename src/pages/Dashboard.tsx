@@ -1,26 +1,91 @@
-import useAuth from "@/hooks/useAuth";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/features/ui/dialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/features/ui/card";
 
-import { useEffect } from "react";
-import axios from "@/api/axios.config";
+import { HelpCircle, BrainCircuit, History } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
-  const { handleNonAuthUser } = useAuth();
+  const navigate = useNavigate();
 
-  async function test() {
-    try {
-      const { data } = await axios.get(`/users`);
+  return (
+    <main className="p-8 mx-auto max-w-7xl">
+      <div className="flex items-center">
+        <h2 className="mr-2 text-3xl font-bold tracking-tight">Dashboard</h2>
+        <Dialog>
+          <DialogTrigger>
+            <span className="flex items-center px-2 py-1 text-white rounded-md bg-slate-800">
+              What is this
+              <HelpCircle className="w-5 h-5 ml-1" />
+            </span>
+          </DialogTrigger>
+          <DialogContent className="w-[70vw] max-w-[100vw] md:w-[50vw]">
+            <DialogHeader>
+              <DialogTitle className="text-2xl">
+                Welcome to Quizzzy!
+              </DialogTitle>
+              <DialogDescription>
+                <p className="my-2 mt-4 ">
+                  Are you tired of mundane and repetitive quizzes? Say goodbye
+                  to the ordinary and embrace the extraordinary with Quizmefy!
+                  Our platform is revolutionizing the quiz and trivia
+                  experience.
+                </p>
+                <hr />
+                <p className="my-2 font-semibold">
+                  <h4 className="text-base font-semibold">Built with</h4>
+                </p>
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+      </div>
 
-      console.log(data);
-    } catch (error) {
-      handleNonAuthUser(error as any);
-    }
-  }
+      <div className="grid gap-4 mt-4 md:grid-cols-2">
+        <Card
+          className="hover:cursor-pointer hover:opacity-75"
+          onClick={() => {
+            navigate("/quiz");
+          }}
+        >
+          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+            <CardTitle className="text-2xl font-bold">Quiz me!</CardTitle>
+            <BrainCircuit size={28} strokeWidth={2.5} />
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              Challenge yourself to a quiz with a topic of your choice.
+            </p>
+          </CardContent>
+        </Card>
 
-  useEffect(() => {
-    test();
-  });
-
-  return <h1>Dashboard</h1>;
+        <Card
+          className="hover:cursor-pointer hover:opacity-75"
+          onClick={() => {
+            navigate("/history");
+          }}
+        >
+          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+            <CardTitle className="text-2xl font-bold">History</CardTitle>
+            <History size={28} strokeWidth={2.5} />
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              View past quiz attempts.
+            </p>
+          </CardContent>
+        </Card>
+        {/* <QuizMeCard />
+    <HistoryCard /> */}
+      </div>
+    </main>
+  );
 }
 
 export default Dashboard;
