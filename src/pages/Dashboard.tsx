@@ -31,16 +31,16 @@ function Dashboard() {
                 Welcome to Quizzzy!
               </DialogTitle>
               <DialogDescription>
-                <p className="my-2 mt-4 ">
+                <span className="block my-2 mt-4 ">
                   Are you tired of mundane and repetitive quizzes? Say goodbye
                   to the ordinary and embrace the extraordinary with Quizmefy!
                   Our platform is revolutionizing the quiz and trivia
                   experience.
-                </p>
+                </span>
                 <hr />
-                <p className="my-2 font-semibold">
-                  <h4 className="text-base font-semibold">Built with</h4>
-                </p>
+                <span className="my-2 font-semibold">
+                  <span className="text-base font-semibold">Built with</span>
+                </span>
               </DialogDescription>
             </DialogHeader>
           </DialogContent>
@@ -59,9 +59,9 @@ function Dashboard() {
             <BrainCircuit size={28} strokeWidth={2.5} />
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">
+            <span className="block text-sm text-muted-foreground">
               Challenge yourself to a quiz with a topic of your choice.
-            </p>
+            </span>
           </CardContent>
         </Card>
 
@@ -76,9 +76,9 @@ function Dashboard() {
             <History size={28} strokeWidth={2.5} />
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">
+            <span className="block text-sm text-muted-foreground">
               View past quiz attempts.
-            </p>
+            </span>
           </CardContent>
         </Card>
         {/* <QuizMeCard />
