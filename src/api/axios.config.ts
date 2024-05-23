@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const baseURL = "http://localhost:5000";
+
 const axiosConfig = axios.create({
-  baseURL: "http://localhost:5000", //replace with your BaseURL
+  baseURL: baseURL, //replace with your BaseURL
   headers: {
     "Content-Type": "application/json", // change according header type accordingly
   },
@@ -39,3 +41,4 @@ axiosConfig.interceptors.response.use(
 );
 
 export default axiosConfig;
+export { baseURL };
