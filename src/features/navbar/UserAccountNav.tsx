@@ -6,15 +6,28 @@ import {
   DropdownMenuTrigger,
 } from "@/features/ui/dropdown-menu";
 import UserAvatar from "./UserAvatar";
+import { setAuth } from "@/slices/authSlice";
+
 import { Link } from "react-router-dom";
 import { LogOut } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 interface UserAccountNavProps {
   name?: string;
   email: string;
 }
 
-const UserAccountNav = ({ email, name = "Tester" }: UserAccountNavProps) => {
+const UserAccountNav = ({ email, name = "" }: UserAccountNavProps) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  function signOut() {
+    localStorage.removeItem("user");
+    dispatch(setAuth(null));
+    navigate("/login");
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -41,6 +54,8 @@ const UserAccountNav = ({ email, name = "Tester" }: UserAccountNavProps) => {
         <DropdownMenuItem
           onSelect={(event) => {
             event.preventDefault();
+
+            signOut();
           }}
           className="text-red-600 cursor-pointer"
         >
