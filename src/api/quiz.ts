@@ -50,4 +50,15 @@ async function getResults(examId: string): Promise<ResultsResponseType> {
   }
 }
 
-export { startExam, answerExam, getResults };
+async function getUserExams(userId: string) {
+  try {
+    const { data } = await axios.get(`exams/history/${userId}`);
+
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export { startExam, answerExam, getResults, getUserExams };
