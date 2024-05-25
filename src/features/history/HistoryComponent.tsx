@@ -1,6 +1,7 @@
 import { getUserExams } from "@/api/quiz";
 import type { RootState } from "@/store";
 import { ExamType } from "@/types/common.type";
+import InitialLoader from "@/features/ui/InitialLoader";
 
 import { Rocket, CopyCheck } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -25,9 +26,7 @@ function HistoryComponent() {
     getHistory();
   }, []);
 
-  console.log(exams);
-
-  return (
+  return exams.length > 0 ? (
     <div className="space-y-8">
       {exams.map((exam) => {
         return (
@@ -54,6 +53,10 @@ function HistoryComponent() {
           </div>
         );
       })}
+    </div>
+  ) : (
+    <div className="space-y-8">
+      <InitialLoader />
     </div>
   );
 }

@@ -4,7 +4,7 @@ import ResultsCard from "./ResultsCard";
 import QuestionsList from "./QuestionsList";
 import { getResults } from "@/api/quiz";
 import { ExamType, QuestionType } from "@/types/common.type";
-import InitialLoader from "@/features/quiz/InitialLoader";
+import InitialLoader from "@/features/ui/InitialLoader";
 
 import { Link, useParams } from "react-router-dom";
 import { LucideLayoutDashboard } from "lucide-react";

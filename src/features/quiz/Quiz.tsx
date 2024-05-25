@@ -8,13 +8,13 @@ import { Button } from "@/features/ui/button";
 import type { RootState } from "@/store";
 import { startExam, answerExam } from "@/api/quiz";
 import { QuestionType } from "@/types/common.type";
-import InitialLoader from "./InitialLoader";
+import InitialLoader from "@/features/ui/InitialLoader";
 import DifficultyBadge from "./DifficultyBadge";
 import Wrapper from "./Wrapper";
 
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { BarChart, ChevronRight, Loader2, Timer } from "lucide-react";
+import { ChevronRight, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const TOTAL_QUESTIONS = 20;
@@ -53,7 +53,7 @@ function Quiz() {
       try {
         const { completed, nextQuestion } = await answerExam({
           examId: examId,
-          questionId: question?.id,
+          questionId: question?.id || "",
           selectedIndex: selectedChoiceIndex,
         });
 
