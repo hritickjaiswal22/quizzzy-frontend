@@ -7,7 +7,7 @@ import {
 import { Button } from "@/features/ui/button";
 import type { RootState } from "@/store";
 import { startExam, answerExam } from "@/api/quiz";
-import { QuestionType } from "@/types/question.type";
+import { QuestionType } from "@/types/common.type";
 import InitialLoader from "./InitialLoader";
 import DifficultyBadge from "./DifficultyBadge";
 import Wrapper from "./Wrapper";

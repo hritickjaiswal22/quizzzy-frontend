@@ -3,6 +3,7 @@ import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Quiz from "./pages/Quiz";
+import Result from "./pages/Results";
 import PrivateRoutes from "./hocs/ProtectedRoute";
 import Navbar from "./features/navbar/Navbar";
 
@@ -16,6 +17,7 @@ function App() {
         <Route element={<PrivateRoutes />}>
           <Route element={<Dashboard />} path="/" />
           <Route element={<Quiz />} path="/quiz" />
+          <Route element={<Result />} path="/results/:examId" />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Signup />} />

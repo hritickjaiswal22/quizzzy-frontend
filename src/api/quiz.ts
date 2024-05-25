@@ -1,5 +1,5 @@
 import axios from "./axios.config";
-import { QuestionType } from "@/types/question.type";
+import { QuestionType, ExamType } from "@/types/common.type";
 
 interface AnswerExamResponseType {
   message: string;
@@ -34,4 +34,20 @@ async function answerExam(input: {
   }
 }
 
-export { startExam, answerExam };
+interface ResultsResponseType {
+  exam: ExamType;
+  questions: Array<QuestionType>;
+}
+
+async function getResults(examId: string): Promise<ResultsResponseType> {
+  try {
+    const { data } = await axios.get(`exams/results/${examId}`);
+
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export { startExam, answerExam, getResults };
