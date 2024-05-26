@@ -45,7 +45,7 @@ function LoginForm() {
         <div className="flex flex-col items-center gap-4">
           <p>OR</p>
           <a
-            href="http://localhost:5000/auths/google"
+            href={`${import.meta.env.VITE_BASE_URL}/auths/google`}
             className={buttonVariants()}
           >
             <LogIn className="mr-2" />
