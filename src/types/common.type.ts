@@ -3,6 +3,7 @@ interface QuestionType {
   options: Array<string>;
   correctOptionIndex: number;
   difficulty: number;
+  tags: Array<string>;
   id?: string;
 }
 

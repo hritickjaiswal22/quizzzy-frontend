@@ -76,12 +76,17 @@ function Quiz() {
     <Wrapper>
       <div className="flex flex-row justify-between">
         <div className="flex flex-col">
-          {/* <p>
+          <p>
             <span className="text-slate-400">Topic</span> &nbsp;
-            <span className="px-2 py-1 text-white rounded-lg bg-slate-800">
-              Test1
-            </span>
-          </p> */}
+            {question.tags.map((tag) => (
+              <span
+                key={tag}
+                className="px-2 py-1 mr-2 text-white rounded-lg bg-slate-800"
+              >
+                {tag}
+              </span>
+            ))}
+          </p>
           {/* <div className="flex self-start mt-3 text-slate-400">
             <Timer className="mr-2" />
             Test12
