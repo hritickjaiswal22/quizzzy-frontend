@@ -1,9 +1,12 @@
 import { setAuth } from "@/slices/authSlice";
 import Authform, { FormStateType } from "./Authform";
 import { signin } from "@/api/auth";
+import { buttonVariants } from "@/features/ui/button";
 
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+// import { Link } from "react-router-dom";
+import { LogIn } from "lucide-react";
 
 function validateInput(email: string, password: string) {
   return email.length > 0 && password.length > 0;
@@ -33,11 +36,24 @@ function LoginForm() {
   }
 
   return (
-    <Authform
-      desc="Already a user , signin!!!"
-      title="Login form"
-      submitHandler={submitHandler}
-    />
+    <>
+      <Authform
+        desc="Already a user , signin!!!"
+        title="Login form"
+        submitHandler={submitHandler}
+      >
+        <div className="flex flex-col items-center gap-4">
+          <p>OR</p>
+          <a
+            href="http://localhost:5000/auths/google"
+            className={buttonVariants()}
+          >
+            <LogIn className="mr-2" />
+            Login Via Google
+          </a>
+        </div>
+      </Authform>
+    </>
   );
 }
 

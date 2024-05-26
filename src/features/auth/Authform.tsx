@@ -10,7 +10,7 @@ import {
 import { Input } from "@/features/ui/input";
 import { Label } from "@/features/ui/label";
 
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
 export interface FormStateType {
   email: string;
@@ -21,9 +21,15 @@ interface AuthFormPropTypes {
   title: string;
   desc: string;
   submitHandler: (obj: FormStateType) => void;
+  children?: ReactNode;
 }
 
-function AuthForm({ title = "", desc = "", submitHandler }: AuthFormPropTypes) {
+function AuthForm({
+  title = "",
+  desc = "",
+  submitHandler,
+  children,
+}: AuthFormPropTypes) {
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -31,7 +37,7 @@ function AuthForm({ title = "", desc = "", submitHandler }: AuthFormPropTypes) {
 
   return (
     <div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-      <Card className="w-[350px]">
+      <Card className="w-[350px] p-4">
         <CardHeader>
           <CardTitle>{title}</CardTitle>
           <CardDescription>{desc}</CardDescription>
@@ -69,7 +75,7 @@ function AuthForm({ title = "", desc = "", submitHandler }: AuthFormPropTypes) {
             </div>
           </form>
         </CardContent>
-        <CardFooter className="flex justify-between">
+        <CardFooter className="flex justify-center">
           <Button
             onClick={() => {
               submitHandler(form);
@@ -78,6 +84,7 @@ function AuthForm({ title = "", desc = "", submitHandler }: AuthFormPropTypes) {
             Submit
           </Button>
         </CardFooter>
+        {children ? children : null}
       </Card>
     </div>
   );

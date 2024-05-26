@@ -7,6 +7,7 @@ const axiosConfig = axios.create({
   headers: {
     "Content-Type": "application/json", // change according header type accordingly
   },
+  withCredentials: true,
 });
 
 axiosConfig.interceptors.request.use(
