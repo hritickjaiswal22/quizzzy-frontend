@@ -2,7 +2,18 @@ import { baseURL } from "./axios.config";
 
 import axios from "axios";
 
-async function signin(email: string, password: string) {
+interface SigninResponseType {
+  email: string;
+  token: string;
+  userId: string;
+}
+
+interface SignupResponseType extends SigninResponseType {}
+
+async function signin(
+  email: string,
+  password: string
+): Promise<SigninResponseType> {
   try {
     const { data } = await axios.post(
       `${baseURL}/auths/login`,
@@ -24,7 +35,10 @@ async function signin(email: string, password: string) {
   }
 }
 
-async function signup(email: string, password: string) {
+async function signup(
+  email: string,
+  password: string
+): Promise<SignupResponseType> {
   try {
     const { data } = await axios.post(
       `${baseURL}/auths/register`,
@@ -47,3 +61,5 @@ async function signup(email: string, password: string) {
 }
 
 export { signin, signup };
+
+export type { SigninResponseType, SignupResponseType };

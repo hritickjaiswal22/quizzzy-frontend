@@ -1,11 +1,12 @@
 import { setAuth } from "@/slices/authSlice";
 import Authform, { FormStateType } from "./Authform";
-import { signin } from "@/api/auth";
+import { signin, SigninResponseType } from "@/api/auth";
 
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
+import { useMutation } from "react-query";
 
 function validateInput(email: string, password: string) {
   return email.length > 0 && password.length > 0;
@@ -15,24 +16,38 @@ function LoginForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  async function submitHandler(obj: FormStateType) {
+  const { mutate, isLoading } = useMutation(login);
+
+  async function login(obj: FormStateType): Promise<SigninResponseType> {
     try {
       const { email, password } = obj;
 
-      if (!validateInput(email, password)) return;
-
       const user = await signin(email, password);
 
-      dispatch(setAuth(user));
-      localStorage.setItem("user", JSON.stringify(user));
-
-      navigate("/");
+      return user;
     } catch (error: any) {
       console.error(error);
-      toast.error(error?.response?.data?.message, {
-        position: "top-right",
-      });
+      throw error;
     }
+  }
+
+  function handleFormSubmission(obj: FormStateType) {
+    if (!validateInput(obj.email, obj.password)) return;
+
+    mutate(obj, {
+      onSuccess: (user: SigninResponseType) => {
+        dispatch(setAuth(user));
+        localStorage.setItem("user", JSON.stringify(user));
+
+        navigate("/");
+      },
+      onError: (error: any) => {
+        console.error(error);
+        toast.error(error?.response?.data?.message, {
+          position: "top-right",
+        });
+      },
+    });
   }
 
   return (
@@ -41,7 +56,8 @@ function LoginForm() {
       <Authform
         desc="Already a user , signin!!!"
         title="Login form"
-        submitHandler={submitHandler}
+        submitHandler={handleFormSubmission}
+        isLoading={isLoading}
       >
         <Link
           className="text-base font-medium leading-none underline"

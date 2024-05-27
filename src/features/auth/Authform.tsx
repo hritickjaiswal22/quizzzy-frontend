@@ -12,7 +12,7 @@ import { Label } from "@/features/ui/label";
 import { buttonVariants } from "@/features/ui/button";
 
 import { ReactNode, useState } from "react";
-import { LogIn } from "lucide-react";
+import { LogIn, Loader2 } from "lucide-react";
 
 export interface FormStateType {
   email: string;
@@ -24,6 +24,7 @@ interface AuthFormPropTypes {
   desc: string;
   submitHandler: (obj: FormStateType) => void;
   children?: ReactNode;
+  isLoading: boolean;
 }
 
 function AuthForm({
@@ -31,6 +32,7 @@ function AuthForm({
   desc = "",
   submitHandler,
   children,
+  isLoading,
 }: AuthFormPropTypes) {
   const [form, setForm] = useState({
     email: "",
@@ -83,7 +85,11 @@ function AuthForm({
               submitHandler(form);
             }}
           >
-            Submit
+            {isLoading ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              "Submit"
+            )}
           </Button>
         </CardFooter>
         <div className="flex flex-col items-center gap-4">
