@@ -9,6 +9,7 @@ import InitialLoader from "@/features/ui/InitialLoader";
 import { Link, useParams } from "react-router-dom";
 import { LucideLayoutDashboard } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Toaster, toast } from "react-hot-toast";
 
 function Results() {
   const { examId } = useParams();
@@ -22,8 +23,11 @@ function Results() {
 
         setExam(exam);
         setQuestions(questions);
-      } catch (error) {
+      } catch (error: any) {
         console.error(error);
+        toast.error(error?.response?.data?.message || "Network error.", {
+          position: "top-right",
+        });
       }
     }
 
@@ -50,6 +54,7 @@ function Results() {
 
   return exam && questions.length ? (
     <>
+      <Toaster />
       <div className="p-8 mx-auto max-w-7xl">
         <div className="flex items-center justify-between space-y-2">
           <h2 className="text-3xl font-bold tracking-tight">Summary</h2>

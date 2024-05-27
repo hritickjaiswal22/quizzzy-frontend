@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { ChevronRight, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Toaster, toast } from "react-hot-toast";
 
 const TOTAL_QUESTIONS = 20;
 
@@ -37,8 +38,11 @@ function Quiz() {
 
         setExamId(exam.examId);
         setQuestion(exam.nextQuestion);
-      } catch (error) {
+      } catch (error: any) {
         console.error(error);
+        toast.error(error?.response?.data?.message || "Network error.", {
+          position: "top-right",
+        });
       } finally {
         setIsLoading(false);
       }
@@ -63,8 +67,11 @@ function Quiz() {
           setQuestionNumber((prev) => prev + 1);
           setQuestion(nextQuestion || null);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error(error);
+        toast.error(error?.response?.data?.message || "Network error.", {
+          position: "top-right",
+        });
       } finally {
         setIsLoading(false);
         setSelectedChoiceIndex(-1);
@@ -74,6 +81,7 @@ function Quiz() {
 
   return question ? (
     <Wrapper>
+      <Toaster />
       <div className="flex flex-row justify-between">
         <div className="flex flex-col">
           <p>

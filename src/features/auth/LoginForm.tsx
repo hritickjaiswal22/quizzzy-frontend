@@ -5,6 +5,7 @@ import { signin } from "@/api/auth";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { Toaster, toast } from "react-hot-toast";
 
 function validateInput(email: string, password: string) {
   return email.length > 0 && password.length > 0;
@@ -28,13 +29,17 @@ function LoginForm() {
       console.log(user);
 
       navigate("/");
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      toast.error(error?.response?.data?.message, {
+        position: "top-right",
+      });
     }
   }
 
   return (
     <>
+      <Toaster />
       <Authform
         desc="Already a user , signin!!!"
         title="Login form"
