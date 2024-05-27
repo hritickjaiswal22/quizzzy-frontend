@@ -14,23 +14,10 @@ function HistoryComponent() {
   const user = useSelector((state: RootState) => state.auth.user);
   const [exams, setExams] = useState<Array<ExamType>>([]);
 
-  const { mutate, isLoading, isError } = useMutation(getHistory);
-
-  async function getHistory() {
-    try {
-      const data = await getUserExams(user?.userId || "");
-
-      return data.exams;
-    } catch (error: any) {
-      console.error(error);
-      toast.error(error?.response?.data?.message || "Network error.", {
-        position: "top-right",
-      });
-    }
-  }
+  const { mutate, isLoading, isError } = useMutation(getUserExams);
 
   useEffect(() => {
-    mutate(undefined, {
+    mutate(user?.userId || "", {
       onSuccess: (exams: Array<ExamType>) => {
         setExams(exams);
       },

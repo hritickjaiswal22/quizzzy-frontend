@@ -54,7 +54,7 @@ async function getUserExams(userId: string) {
   try {
     const { data } = await axios.get(`exams/history/${userId}`);
 
-    return data;
+    return data.exams;
   } catch (error) {
     console.error(error);
     throw error;

@@ -17,21 +17,10 @@ function Results() {
   const [questions, setQuestions] = useState<Array<QuestionType>>([]);
   const [exam, setExam] = useState<null | ExamType>(null);
 
-  const { mutate, isLoading, isError } = useMutation(getExamResults);
-
-  async function getExamResults() {
-    try {
-      const obj = await getResults(examId || "");
-
-      return obj;
-    } catch (error: any) {
-      console.error(error);
-      throw error;
-    }
-  }
+  const { mutate, isLoading, isError } = useMutation(getResults);
 
   useEffect(() => {
-    mutate(undefined, {
+    mutate(examId || "", {
       onSuccess: ({ exam, questions }: ResultsResponseType) => {
         setExam(exam);
         setQuestions(questions);
