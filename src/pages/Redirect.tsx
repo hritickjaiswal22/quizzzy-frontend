@@ -19,8 +19,6 @@ function Redirect() {
     dispatch(setAuth(user));
     localStorage.setItem("user", JSON.stringify(user));
 
-    console.log(user);
-
     navigate("/");
   }, []);
 

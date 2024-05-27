@@ -25,8 +25,6 @@ function SignupForm() {
       dispatch(setAuth(user));
       localStorage.setItem("user", JSON.stringify(user));
 
-      console.log(user);
-
       navigate("/");
     } catch (error: any) {
       console.error(error);

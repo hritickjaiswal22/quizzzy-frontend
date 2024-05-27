@@ -47,9 +47,6 @@ function Results() {
     return 0;
   }
 
-  console.log(exam);
-  console.log(questions);
-
   const accuracy = calculateAccuracy();
 
   return exam && questions.length ? (
