@@ -3,7 +3,7 @@ import Authform, { FormStateType } from "./Authform";
 import { signup } from "@/api/auth";
 
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function validateInput(email: string, password: string) {
   return email.length > 0 && password.length > 0;
@@ -37,7 +37,14 @@ function SignupForm() {
       desc="Not a user, signup!"
       title="Signup form"
       submitHandler={submitHandler}
-    />
+    >
+      <Link
+        className="text-base font-medium leading-none underline"
+        to={`/login`}
+      >
+        Already a user ?
+      </Link>
+    </Authform>
   );
 }
 

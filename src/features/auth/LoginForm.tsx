@@ -1,12 +1,10 @@
 import { setAuth } from "@/slices/authSlice";
 import Authform, { FormStateType } from "./Authform";
 import { signin } from "@/api/auth";
-import { buttonVariants } from "@/features/ui/button";
 
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-// import { Link } from "react-router-dom";
-import { LogIn } from "lucide-react";
+import { Link } from "react-router-dom";
 
 function validateInput(email: string, password: string) {
   return email.length > 0 && password.length > 0;
@@ -42,16 +40,12 @@ function LoginForm() {
         title="Login form"
         submitHandler={submitHandler}
       >
-        <div className="flex flex-col items-center gap-4">
-          <p>OR</p>
-          <a
-            href={`${import.meta.env.VITE_BASE_URL}/auths/google`}
-            className={buttonVariants()}
-          >
-            <LogIn className="mr-2" />
-            Login Via Google
-          </a>
-        </div>
+        <Link
+          className="text-base font-medium leading-none underline"
+          to={`/register`}
+        >
+          New User ?
+        </Link>
       </Authform>
     </>
   );

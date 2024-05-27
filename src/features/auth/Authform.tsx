@@ -9,8 +9,10 @@ import {
 } from "@/features/ui/card";
 import { Input } from "@/features/ui/input";
 import { Label } from "@/features/ui/label";
+import { buttonVariants } from "@/features/ui/button";
 
 import { ReactNode, useState } from "react";
+import { LogIn } from "lucide-react";
 
 export interface FormStateType {
   email: string;
@@ -84,7 +86,17 @@ function AuthForm({
             Submit
           </Button>
         </CardFooter>
-        {children ? children : null}
+        <div className="flex flex-col items-center gap-4">
+          <p>OR</p>
+          <a
+            href={`${import.meta.env.VITE_BASE_URL}/auths/google`}
+            className={buttonVariants()}
+          >
+            <LogIn className="mr-2" />
+            Login Via Google
+          </a>
+        </div>
+        {children ? <div className="text-center mt-4">{children}</div> : null}
       </Card>
     </div>
   );
