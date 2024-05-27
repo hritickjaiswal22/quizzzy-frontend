@@ -62,3 +62,5 @@ async function getUserExams(userId: string) {
 }
 
 export { startExam, answerExam, getResults, getUserExams };
+
+export type { ResultsResponseType };

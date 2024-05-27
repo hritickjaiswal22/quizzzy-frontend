@@ -2,6 +2,7 @@ import { getUserExams } from "@/api/quiz";
 import type { RootState } from "@/store";
 import { ExamType } from "@/types/common.type";
 import InitialLoader from "@/features/ui/InitialLoader";
+import { useMutation } from "react-query";
 
 import { Rocket, CopyCheck } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -13,26 +14,50 @@ function HistoryComponent() {
   const user = useSelector((state: RootState) => state.auth.user);
   const [exams, setExams] = useState<Array<ExamType>>([]);
 
-  useEffect(() => {
-    async function getHistory() {
-      try {
-        const data = await getUserExams(user?.userId || "");
+  const { mutate, isLoading, isError } = useMutation(getHistory);
 
-        setExams(data.exams);
-      } catch (error: any) {
+  async function getHistory() {
+    try {
+      const data = await getUserExams(user?.userId || "");
+
+      return data.exams;
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error?.response?.data?.message || "Network error.", {
+        position: "top-right",
+      });
+    }
+  }
+
+  useEffect(() => {
+    mutate(undefined, {
+      onSuccess: (exams: Array<ExamType>) => {
+        setExams(exams);
+      },
+      onError: (error: any) => {
         console.error(error);
         toast.error(error?.response?.data?.message || "Network error.", {
           position: "top-right",
         });
-      }
-    }
-
-    getHistory();
+      },
+    });
   }, []);
 
-  return exams.length > 0 ? (
-    <>
+  if (isLoading)
+    return (
+      <div className="space-y-8">
+        <InitialLoader />
+      </div>
+    );
+
+  if (isError)
+    <div className="space-y-8">
       <Toaster />
+      <h1>There was an error.Please try again</h1>
+    </div>;
+
+  return (
+    <>
       <div className="space-y-8">
         {exams.map((exam) => {
           return (
@@ -60,10 +85,6 @@ function HistoryComponent() {
         })}
       </div>
     </>
-  ) : (
-    <div className="space-y-8">
-      <InitialLoader />
-    </div>
   );
 }
 

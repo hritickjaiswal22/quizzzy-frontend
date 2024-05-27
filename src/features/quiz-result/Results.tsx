@@ -2,7 +2,7 @@ import { buttonVariants } from "@/features/ui/button";
 import AccuracyCard from "./AccuracyCard";
 import ResultsCard from "./ResultsCard";
 import QuestionsList from "./QuestionsList";
-import { getResults } from "@/api/quiz";
+import { getResults, ResultsResponseType } from "@/api/quiz";
 import { ExamType, QuestionType } from "@/types/common.type";
 import InitialLoader from "@/features/ui/InitialLoader";
 
@@ -10,28 +10,39 @@ import { Link, useParams } from "react-router-dom";
 import { LucideLayoutDashboard } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
+import { useMutation } from "react-query";
 
 function Results() {
   const { examId } = useParams();
   const [questions, setQuestions] = useState<Array<QuestionType>>([]);
   const [exam, setExam] = useState<null | ExamType>(null);
 
-  useEffect(() => {
-    async function getExamResults() {
-      try {
-        const { exam, questions } = await getResults(examId || "");
+  const { mutate, isLoading, isError } = useMutation(getExamResults);
 
+  async function getExamResults() {
+    try {
+      const obj = await getResults(examId || "");
+
+      return obj;
+    } catch (error: any) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  useEffect(() => {
+    mutate(undefined, {
+      onSuccess: ({ exam, questions }: ResultsResponseType) => {
         setExam(exam);
         setQuestions(questions);
-      } catch (error: any) {
+      },
+      onError: (error: any) => {
         console.error(error);
         toast.error(error?.response?.data?.message || "Network error.", {
           position: "top-right",
         });
-      }
-    }
-
-    getExamResults();
+      },
+    });
   }, []);
 
   function calculateAccuracy() {
@@ -49,7 +60,20 @@ function Results() {
 
   const accuracy = calculateAccuracy();
 
-  return exam && questions.length ? (
+  if (isLoading)
+    return (
+      <div className="p-8 mx-auto max-w-7xl">
+        <InitialLoader />
+      </div>
+    );
+
+  if (isError)
+    <div className="p-8 mx-auto max-w-7xl">
+      <Toaster />
+      <h1>There was an error.Please try again.</h1>
+    </div>;
+
+  return (
     <>
       <Toaster />
       <div className="p-8 mx-auto max-w-7xl">
@@ -73,15 +97,11 @@ function Results() {
         </div>
         <QuestionsList
           questions={questions}
-          responseIndices={exam.responseIndices}
+          responseIndices={exam?.responseIndices || []}
           percentageCorrect={accuracy}
         />
       </div>
     </>
-  ) : (
-    <div className="p-8 mx-auto max-w-7xl">
-      <InitialLoader />
-    </div>
   );
 }
 
