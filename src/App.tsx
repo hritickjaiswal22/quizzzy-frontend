@@ -10,12 +10,10 @@ import PrivateRoutes from "./hocs/ProtectedRoute";
 import Navbar from "./features/navbar/Navbar";
 
 import { Route, Routes } from "react-router-dom";
-import { SpeedInsights } from "@vercel/speed-insights/react";
 
 function App() {
   return (
     <section className="antialiased min-h-screen pt-16">
-      <SpeedInsights />
       <Navbar />
       <Routes>
         <Route element={<PrivateRoutes />}>
