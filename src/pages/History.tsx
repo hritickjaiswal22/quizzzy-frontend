@@ -18,7 +18,7 @@ function HistoryPage() {
             </Link>
           </div>
         </CardHeader>
-        <CardContent className="max-h-[60vh]">
+        <CardContent className="max-h-[60vh] overflow-y-auto">
           <HistoryComponent />
         </CardContent>
       </Card>
