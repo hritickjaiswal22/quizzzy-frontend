@@ -14,7 +14,8 @@ interface ExamType {
   date: Date;
   score: number;
   completed: boolean;
-  id: string;
+  _id: string;
+  __typename?: string;
 }
 
 export type { QuestionType, ExamType };
