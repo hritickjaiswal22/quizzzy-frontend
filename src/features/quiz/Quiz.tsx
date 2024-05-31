@@ -5,26 +5,65 @@ import {
   CardTitle,
 } from "@/features/ui/card";
 import { Button } from "@/features/ui/button";
-import type { RootState } from "@/store";
-import { startExam, answerExam } from "@/api/quiz";
 import { QuestionType } from "@/types/common.type";
 import InitialLoader from "@/features/ui/InitialLoader";
 import DifficultyBadge from "./DifficultyBadge";
 import Wrapper from "./Wrapper";
 
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { ChevronRight, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
+import { gql, useMutation } from "@apollo/client";
 
 const TOTAL_QUESTIONS = 20;
 
+const NEW_QUIZ = gql`
+  mutation NewQuiz {
+    newQuiz {
+      examId
+      nextQuestion {
+        _id
+        difficulty
+        options
+        tags
+        text
+      }
+    }
+  }
+`;
+
+const ANSWER_QUESTION = gql`
+  mutation AnswerQuizQuestion(
+    $examId: String!
+    $selectedIndex: Int!
+    $questionId: String!
+  ) {
+    answerQuizQuestion(
+      examId: $examId
+      selectedIndex: $selectedIndex
+      questionId: $questionId
+    ) {
+      completed
+      message
+      nextQuestion {
+        _id
+        difficulty
+        options
+        tags
+        text
+      }
+      success
+    }
+  }
+`;
+
 function Quiz() {
-  const user = useSelector((state: RootState) => state.auth.user);
   const navigate = useNavigate();
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [startQuiz, { loading: loading1 }] = useMutation(NEW_QUIZ);
+  const [answerQuestion, { loading: loading2 }] = useMutation(ANSWER_QUESTION);
+
   const [question, setQuestion] = useState<QuestionType | null>(null);
   const [examId, setExamId] = useState("");
   const [questionNumber, setQuestionNumber] = useState(1);
@@ -32,34 +71,34 @@ function Quiz() {
 
   useEffect(() => {
     async function createExam() {
-      setIsLoading(true);
       try {
-        const exam = await startExam(user?.userId || "");
+        const { data } = await startQuiz();
 
-        setExamId(exam.examId);
-        setQuestion(exam.nextQuestion);
+        setExamId(data?.newQuiz?.examId);
+        setQuestion(data?.newQuiz?.nextQuestion);
       } catch (error: any) {
         console.error(error);
-        toast.error(error?.response?.data?.message || "Network error.", {
+        toast.error(error?.message || "Network error.", {
           position: "top-right",
         });
-      } finally {
-        setIsLoading(false);
       }
     }
 
-    if (user && user.userId) createExam();
+    createExam();
   }, []);
 
   async function handleNext() {
     if (examId && question) {
-      setIsLoading(true);
       try {
-        const { completed, nextQuestion } = await answerExam({
-          examId: examId,
-          questionId: question?.id || "",
-          selectedIndex: selectedChoiceIndex,
+        const { data } = await answerQuestion({
+          variables: {
+            examId: examId,
+            questionId: question?._id || "",
+            selectedIndex: selectedChoiceIndex,
+          },
         });
+
+        const { completed, nextQuestion } = data.answerQuizQuestion;
 
         if (completed) {
           navigate(`/results/${examId}`);
@@ -73,13 +112,21 @@ function Quiz() {
           position: "top-right",
         });
       } finally {
-        setIsLoading(false);
         setSelectedChoiceIndex(-1);
       }
     }
   }
 
-  return question ? (
+  if (loading1 || loading2)
+    return (
+      <Wrapper>
+        <InitialLoader />
+      </Wrapper>
+    );
+
+  if (!question) return <h1>There was an error !!</h1>;
+
+  return (
     <Wrapper>
       <Toaster />
       <div className="flex flex-row justify-between">
@@ -142,19 +189,15 @@ function Quiz() {
           variant="default"
           className="mt-2"
           size="lg"
-          disabled={isLoading}
+          disabled={loading2}
           onClick={() => {
             handleNext();
           }}
         >
-          {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+          {loading2 && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
           Next <ChevronRight className="w-4 h-4 ml-2" />
         </Button>
       </div>
-    </Wrapper>
-  ) : (
-    <Wrapper>
-      <InitialLoader />
     </Wrapper>
   );
 }

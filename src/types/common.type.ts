@@ -4,7 +4,7 @@ interface QuestionType {
   correctOptionIndex: number;
   difficulty: number;
   tags: Array<string>;
-  id?: string;
+  _id?: string;
 }
 
 interface ExamType {
