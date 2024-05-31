@@ -2,7 +2,6 @@ import { buttonVariants } from "@/features/ui/button";
 import AccuracyCard from "./AccuracyCard";
 import ResultsCard from "./ResultsCard";
 import QuestionsList from "./QuestionsList";
-import { getResults, ResultsResponseType } from "@/api/quiz";
 import { ExamType, QuestionType } from "@/types/common.type";
 import InitialLoader from "@/features/ui/InitialLoader";
 
@@ -10,28 +9,56 @@ import { Link, useParams } from "react-router-dom";
 import { LucideLayoutDashboard } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
-import { useMutation } from "react-query";
+import { gql, useLazyQuery } from "@apollo/client";
+
+const GET_RESULT = gql`
+  query GetExamResults($examId: String!) {
+    getExamResults(examId: $examId) {
+      exam {
+        _id
+        completed
+        responseIndices
+        score
+        userId
+      }
+      questions {
+        correctOptionIndex
+        difficulty
+        options
+        tags
+        text
+      }
+    }
+  }
+`;
 
 function Results() {
   const { examId } = useParams();
   const [questions, setQuestions] = useState<Array<QuestionType>>([]);
   const [exam, setExam] = useState<null | ExamType>(null);
 
-  const { mutate, isLoading, isError } = useMutation(getResults);
+  const [getResult, { loading, error }] = useLazyQuery(GET_RESULT);
 
   useEffect(() => {
-    mutate(examId || "", {
-      onSuccess: ({ exam, questions }: ResultsResponseType) => {
-        setExam(exam);
-        setQuestions(questions);
-      },
-      onError: (error: any) => {
+    async function fetchResult() {
+      try {
+        const { data } = await getResult({
+          variables: {
+            examId,
+          },
+        });
+
+        setExam(data.getExamResults.exam);
+        setQuestions(data.getExamResults.questions);
+      } catch (error: any) {
         console.error(error);
-        toast.error(error?.response?.data?.message || "Network error.", {
+        toast.error(error?.message || "Network error.", {
           position: "top-right",
         });
-      },
-    });
+      }
+    }
+
+    fetchResult();
   }, []);
 
   function calculateAccuracy() {
@@ -49,14 +76,14 @@ function Results() {
 
   const accuracy = calculateAccuracy();
 
-  if (isLoading)
+  if (loading)
     return (
       <div className="p-8 mx-auto max-w-7xl">
         <InitialLoader />
       </div>
     );
 
-  if (isError)
+  if (error)
     <div className="p-8 mx-auto max-w-7xl">
       <Toaster />
       <h1>There was an error.Please try again.</h1>
