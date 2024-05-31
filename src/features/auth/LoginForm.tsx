@@ -1,53 +1,65 @@
 import { setAuth } from "@/slices/authSlice";
 import Authform, { FormStateType } from "./Authform";
-import { signin, SigninResponseType } from "@/api/auth";
 
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
-import { useMutation } from "react-query";
+import { gql, useMutation } from "@apollo/client";
 
 function validateInput(email: string, password: string) {
   return email.length > 0 && password.length > 0;
 }
 
+// Define mutation
+const SIGNIN = gql`
+  # login the user
+  mutation Signin($email: String!, $password: String!) {
+    signin(email: $email, password: $password) {
+      email
+      token
+      userId
+    }
+  }
+`;
+
 function LoginForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { mutate, isLoading } = useMutation(login);
+  const [loginUser, { loading }] = useMutation(SIGNIN);
 
-  async function login(obj: FormStateType): Promise<SigninResponseType> {
+  async function handleFormSubmission(obj: FormStateType) {
     try {
       const { email, password } = obj;
-
-      const user = await signin(email, password);
-
-      return user;
-    } catch (error: any) {
-      console.error(error);
-      throw error;
-    }
-  }
-
-  function handleFormSubmission(obj: FormStateType) {
-    if (!validateInput(obj.email, obj.password)) return;
-
-    mutate(obj, {
-      onSuccess: (user: SigninResponseType) => {
-        dispatch(setAuth(user));
-        localStorage.setItem("user", JSON.stringify(user));
-
-        navigate("/");
-      },
-      onError: (error: any) => {
-        console.error(error);
-        toast.error(error?.response?.data?.message, {
+      if (!validateInput(email, password)) {
+        toast.error("Invalid input", {
           position: "top-right",
         });
-      },
-    });
+        return;
+      }
+
+      const { data } = await loginUser({
+        variables: {
+          email,
+          password,
+        },
+      });
+
+      const { __typename, ...user } = data.signin;
+
+      dispatch(setAuth(user));
+      localStorage.setItem("user", JSON.stringify(user));
+
+      navigate("/");
+
+      return __typename;
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error?.message || "", {
+        position: "top-right",
+      });
+    }
   }
 
   return (
@@ -57,7 +69,7 @@ function LoginForm() {
         desc="Already a user , signin!!!"
         title="Login form"
         submitHandler={handleFormSubmission}
-        isLoading={isLoading}
+        isLoading={loading}
       >
         <Link
           className="text-base font-medium leading-none underline"

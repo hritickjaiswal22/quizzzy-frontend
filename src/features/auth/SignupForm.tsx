@@ -1,52 +1,63 @@
 import { setAuth } from "@/slices/authSlice";
 import Authform, { FormStateType } from "./Authform";
-import { signup, SignupResponseType } from "@/api/auth";
 
 import { useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
-import { useMutation } from "react-query";
+import { gql, useMutation } from "@apollo/client";
 
 function validateInput(email: string, password: string) {
   return email.length > 0 && password.length > 0;
 }
 
+const SIGNUP = gql`
+  # login the user
+  mutation Signup($email: String!, $password: String!) {
+    signup(email: $email, password: $password) {
+      email
+      token
+      userId
+    }
+  }
+`;
+
 function SignupForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { mutate, isLoading } = useMutation(register);
+  const [signupUser, { loading }] = useMutation(SIGNUP);
 
-  async function register(obj: FormStateType): Promise<SignupResponseType> {
+  async function handleFormSubmission(obj: FormStateType) {
     try {
       const { email, password } = obj;
-
-      const user = await signup(email, password);
-
-      return user;
-    } catch (error: any) {
-      console.error(error);
-      throw error;
-    }
-  }
-
-  function handleFormSubmission(obj: FormStateType) {
-    if (!validateInput(obj.email, obj.password)) return;
-
-    mutate(obj, {
-      onSuccess: (user: SignupResponseType) => {
-        dispatch(setAuth(user));
-        localStorage.setItem("user", JSON.stringify(user));
-
-        navigate("/");
-      },
-      onError: (error: any) => {
-        console.error(error);
-        toast.error(error?.response?.data?.message, {
+      if (!validateInput(email, password)) {
+        toast.error("Invalid input", {
           position: "top-right",
         });
-      },
-    });
+        return;
+      }
+
+      const { data } = await signupUser({
+        variables: {
+          email,
+          password,
+        },
+      });
+
+      const { __typename, ...user } = data.signup;
+
+      dispatch(setAuth(user));
+      localStorage.setItem("user", JSON.stringify(user));
+
+      navigate("/");
+
+      return __typename;
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error?.message || "", {
+        position: "top-right",
+      });
+    }
   }
 
   return (
@@ -56,7 +67,7 @@ function SignupForm() {
         desc="Not a user, signup!"
         title="Signup form"
         submitHandler={handleFormSubmission}
-        isLoading={isLoading}
+        isLoading={loading}
       >
         <Link
           className="text-base font-medium leading-none underline"
