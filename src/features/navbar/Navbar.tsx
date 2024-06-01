@@ -20,7 +20,7 @@ const Navbar = () => {
         </Link>
         <div className="flex items-center">
           <ThemeToggle className="mr-4" />
-          {user ? (
+          {user && user?.token ? (
             <UserAccountNav email={user.email} />
           ) : (
             <SignInButton text={"Sign In"} />
