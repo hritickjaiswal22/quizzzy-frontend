@@ -7,12 +7,32 @@ import {
   DialogTrigger,
 } from "@/features/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/features/ui/card";
+import { setAuth } from "@/slices/authSlice";
 
 import { HelpCircle, BrainCircuit, History } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import Cookie from "js-cookie";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 function Dashboard() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (Cookie.get("token")) {
+      const user = {
+        email: Cookie.get("email") || "",
+        token: Cookie.get("token") || "",
+        userId: Cookie.get("userId") || "",
+      };
+
+      dispatch(setAuth(user));
+      localStorage.setItem("user", JSON.stringify(user));
+
+      navigate("/");
+    }
+  }, []);
 
   return (
     <main className="p-8 mx-auto max-w-7xl">
