@@ -10,16 +10,20 @@ function Redirect() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const user = {
-      email: Cookie.get("email") || "",
-      token: Cookie.get("token") || "",
-      userId: Cookie.get("userId") || "",
-    };
+    if (Cookie.get("token") && Cookie.get("email") && Cookie.get("userId")) {
+      const user = {
+        email: Cookie.get("email") || "",
+        token: Cookie.get("token") || "",
+        userId: Cookie.get("userId") || "",
+      };
 
-    dispatch(setAuth(user));
-    localStorage.setItem("user", JSON.stringify(user));
+      dispatch(setAuth(user));
+      localStorage.setItem("user", JSON.stringify(user));
 
-    navigate("/");
+      navigate("/");
+    } else {
+      navigate("/login");
+    }
   }, []);
 
   return <></>;
